@@ -27,22 +27,75 @@ const SubmittedData = ({ data, onEdit, onDelete, onNewForm }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-bold">Submitted Information</h2>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <span className="text-sm text-gray-500">
             Total Submissions: {data.length}
           </span>
           <button
             onClick={handleNewForm}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors w-full sm:w-auto"
           >
             Start New Form
           </button>
         </div>
       </div>
-      
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+
+      <div className="block lg:hidden space-y-4">
+        {data.map((item) => (
+          <div key={item.id} className="bg-white rounded-lg shadow p-4 space-y-4">
+            <div>
+              <h3 className="font-medium text-gray-900 border-b pb-2">Personal Information</h3>
+              <div className="mt-2">
+                <p className="font-medium">{item.firstName} {item.lastName}</p>
+                <p className="text-sm text-gray-500">Age: {item.age || 'N/A'}</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-medium text-gray-900 border-b pb-2">Address Details</h3>
+              <div className="mt-2">
+                <p className="text-sm">{item.street}</p>
+                <p className="text-sm text-gray-500">{item.city}, {item.state}</p>
+                <p className="text-sm text-gray-500">PIN: {item.zipCode}</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-medium text-gray-900 border-b pb-2">Payment Information</h3>
+              <div className="mt-2">
+                <p className="text-sm">Card: **** **** **** {item.cardNumber?.slice(-4)}</p>
+                <p className="text-sm text-gray-500">{item.cardholderName}</p>
+                <p className="text-sm text-gray-500">Expires: {item.expiryDate}</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-2 border-t">
+              <button
+                onClick={() => onEdit(item.id)}
+                className="text-blue-600 hover:text-blue-800 transition-colors duration-200 p-2"
+                title="Edit"
+              >
+                <FaEdit size={20} />
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this entry?')) {
+                    onDelete(item.id);
+                  }
+                }}
+                className="text-red-600 hover:text-red-800 transition-colors duration-200 p-2"
+                title="Delete"
+              >
+                <FaTrash size={20} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden lg:block overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
